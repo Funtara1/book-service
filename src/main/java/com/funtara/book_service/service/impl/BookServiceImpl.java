@@ -5,17 +5,20 @@ import com.funtara.book_service.model.Book;
 import com.funtara.book_service.repository.BookRepository;
 import com.funtara.book_service.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
 
     @Override
+    @Transactional
     public Book createBook(String bookName, String authorName) {
         Book book = Book.builder()
                 .bookName(bookName)
@@ -25,8 +28,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
+    public Page<Book> getAllBooks(Pageable pageable) {
+        return bookRepository.findAll(pageable);
     }
 
     @Override
@@ -36,15 +39,16 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public Book updateBook(Long id, String bookName, String authorName) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException(id));
+        Book book = getBookById(id);
         book.setBookName(bookName);
         book.setAuthorName(authorName);
         return bookRepository.save(book);
     }
 
     @Override
+    @Transactional
     public void deleteBook(Long id) {
         if (!bookRepository.existsById(id)) {
             throw new BookNotFoundException(id);
