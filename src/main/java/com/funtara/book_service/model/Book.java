@@ -12,7 +12,8 @@ import java.time.Instant;
 @Entity
 @Builder
 @Table(name = "books",
-        uniqueConstraints = @UniqueConstraint(name = "uk_books_name_author",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uk_books_name_author",
                 columnNames = {"book_name", "author_name"}))
 public class Book {
 
@@ -49,7 +50,8 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{id=" + id + ", bookName='" + bookName + '\'' +
+        return "Book{id=" + id +
+                ", bookName='" + bookName + '\'' +
                 ", authorName='" + authorName + '\'' + '}';
     }
 }

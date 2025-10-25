@@ -1,14 +1,27 @@
+# === Java / Maven ===
 /target/
-!.mvn/wrapper/maven-wrapper.jar
-/.idea/
-/*.iml
-*.ipr
-*.iws
-.vscode/
-.DS_Store
-Thumbs.db
 *.log
 *.tmp
-*.swp
-spring-boot-devtools
+*.bak
 *.backup
+
+# === IntelliJ IDEA / VSCode ===
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+
+# === OS files ===
+.DS_Store
+Thumbs.db
+
+# === Maven Wrapper ===
+!.mvn/wrapper/maven-wrapper.jar
+
+# === Spring Boot DevTools cache ===
+spring-boot-devtools
+
+# === Test outputs ===
+*.swp
+*.orig

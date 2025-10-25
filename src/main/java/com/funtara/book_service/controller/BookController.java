@@ -1,8 +1,6 @@
 package com.funtara.book_service.controller;
 
-import com.funtara.book_service.api.dto.BookResponse;
-import com.funtara.book_service.api.dto.CreateBookRequest;
-import com.funtara.book_service.api.dto.UpdateBookRequest;
+import com.funtara.book_service.api.dto.*;
 import com.funtara.book_service.api.mapper.BookMapper;
 import com.funtara.book_service.model.Book;
 import com.funtara.book_service.service.BookService;
@@ -25,7 +23,7 @@ public class BookController {
 
     @PostMapping
     public ResponseEntity<BookResponse> createBook(@Valid @RequestBody CreateBookRequest req) {
-        Book savedBook = bookService.createBook(req.bookName(), req.authorName());
+        Book savedBook = bookService.createBook(req);
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(savedBook));
     }
 
@@ -43,7 +41,7 @@ public class BookController {
     @PutMapping("/{id}")
     public ResponseEntity<BookResponse> updateBook(@PathVariable Long id,
                                                    @Valid @RequestBody UpdateBookRequest req) {
-        Book updated = bookService.updateBook(id, req.bookName(), req.authorName());
+        Book updated = bookService.updateBook(id, req);
         return ResponseEntity.ok(mapper.toResponse(updated));
     }
 

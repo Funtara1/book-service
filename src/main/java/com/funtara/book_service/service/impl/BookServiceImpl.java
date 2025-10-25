@@ -1,5 +1,8 @@
 package com.funtara.book_service.service.impl;
 
+import com.funtara.book_service.api.dto.CreateBookRequest;
+import com.funtara.book_service.api.dto.UpdateBookRequest;
+import com.funtara.book_service.api.mapper.BookMapper;
 import com.funtara.book_service.exception.BookNotFoundException;
 import com.funtara.book_service.model.Book;
 import com.funtara.book_service.repository.BookRepository;
@@ -16,14 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
+    private final BookMapper mapper;
 
     @Override
     @Transactional
-    public Book createBook(String bookName, String authorName) {
-        Book book = Book.builder()
-                .bookName(bookName)
-                .authorName(authorName)
-                .build();
+    public Book createBook(CreateBookRequest request) {
+        Book book = mapper.toEntity(request);
         return bookRepository.save(book);
     }
 
@@ -40,11 +41,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book updateBook(Long id, String bookName, String authorName) {
-        Book book = getBookById(id);
-        book.setBookName(bookName);
-        book.setAuthorName(authorName);
-        return bookRepository.save(book);
+    public Book updateBook(Long id, UpdateBookRequest request) {
+        Book existing = getBookById(id);
+        mapper.updateEntity(existing, request);
+        return bookRepository.save(existing);
     }
 
     @Override
