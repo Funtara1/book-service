@@ -4,7 +4,7 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<!-- ✅ ВАЖНО: подключает версии для всех spring-boot-* зависимостей и плагинов -->
+	<!-- Spring Boot manages starters/plugins -->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -25,6 +25,9 @@
 		<springdoc.version>2.6.0</springdoc.version>
 		<testcontainers.version>1.20.2</testcontainers.version>
 		<lombok.version>1.18.34</lombok.version>
+
+		<!-- ⬇️ Переопределяем версию Flyway поверх Spring Boot -->
+		<flyway.version>11.15.0</flyway.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -51,17 +54,24 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
-		<!-- Database -->
+		<!-- DB -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- Flyway -->
+		<!-- ✅ Flyway core + модуль для PostgreSQL (версии должны совпадать) -->
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
+			<version>${flyway.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-database-postgresql</artifactId>
+			<version>${flyway.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<!-- OpenAPI / Swagger UI -->
@@ -92,7 +102,7 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- Testing -->
+		<!-- Tests -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -114,7 +124,7 @@
 
 	<build>
 		<plugins>
-			<!-- Компилятор с поддержкой MapStruct и Lombok -->
+			<!-- Компилятор с MapStruct и Lombok -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -138,7 +148,7 @@
 				</configuration>
 			</plugin>
 
-			<!-- Spring Boot plugin (версию управляет parent) -->
+			<!-- Spring Boot plugin -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -146,7 +156,6 @@
 		</plugins>
 	</build>
 
-	<!-- Центральный репозиторий (по умолчанию) -->
 	<repositories>
 		<repository>
 			<id>central</id>
