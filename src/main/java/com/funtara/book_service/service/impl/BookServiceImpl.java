@@ -67,4 +67,18 @@ public class BookServiceImpl implements BookService {
         }
         bookRepository.deleteById(id);
     }
+
+    @Override
+    public List<Book> searchBooks(String name, String author) {
+        if (name != null && author != null) {
+            return bookRepository.findByBookNameContainingIgnoreCaseAndAuthorNameContainingIgnoreCase(name, author);
+        } else if (name != null) {
+            return bookRepository.findByBookNameContainingIgnoreCase(name);
+        } else if (author != null) {
+            return bookRepository.findByAuthorNameContainingIgnoreCase(author);
+        } else {
+            return bookRepository.findAll();
+        }
+    }
+
 }

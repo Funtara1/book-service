@@ -15,4 +15,6 @@ public interface BookService {
     Book getBookById(Long id);
     Book updateBook(Long id, UpdateBookRequest request);
     void deleteBook(Long id);
+    List<Book> searchBooks(String name, String author);
+
 }
