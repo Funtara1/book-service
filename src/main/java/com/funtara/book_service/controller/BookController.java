@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/books")
@@ -25,6 +28,13 @@ public class BookController {
     public ResponseEntity<BookResponse> createBook(@Valid @RequestBody CreateBookRequest req) {
         Book savedBook = bookService.createBook(req);
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(savedBook));
+    }
+
+    @PostMapping("/batch")
+    public ResponseEntity<List<BookResponse>> createBooks(@Valid @RequestBody List<CreateBookRequest> requests) {
+        List<Book> savedBooks = bookService.createBooks(requests);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(savedBooks.stream().map(mapper::toResponse).toList());
     }
 
     @GetMapping
@@ -46,8 +56,14 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBook(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Object>> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
+        return ResponseEntity.ok(
+                Map.of(
+                        "message", "Book with ID " + id + " deleted successfully",
+                        "id", id
+                )
+        );
     }
+
 }

@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -27,6 +29,16 @@ public class BookServiceImpl implements BookService {
         Book book = mapper.toEntity(request);
         return bookRepository.save(book);
     }
+
+    @Override
+    @Transactional
+    public List<Book> createBooks(List<CreateBookRequest> requests) {
+        List<Book> books = requests.stream()
+                .map(mapper::toEntity)
+                .toList();
+        return bookRepository.saveAll(books);
+    }
+
 
     @Override
     public Page<Book> getAllBooks(Pageable pageable) {
